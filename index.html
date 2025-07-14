@@ -3,93 +3,141 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Inventory | Login</title>
+  <title>Inventory | Login & Sign-up</title>
   <style>
-    /* ---------- Reset & Base ---------- */
+    /* ---------- Base ---------- */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: linear-gradient(135deg, #0d6efd 0%, #6610f2 100%);
-      display: flex; align-items: center; justify-content: center;
-      height: 100vh; color: #212529;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: linear-gradient(135deg,#0d6efd 0%,#6610f2 100%);
+      display:flex;align-items:center;justify-content:center;height:100vh;
     }
     /* ---------- Card ---------- */
-    .card {
-      width: 100%; max-width: 420px;
-      background: #fff; padding: 2.5rem 2rem;
-      border-radius: 1rem; box-shadow: 0 10px 35px rgba(0,0,0,.15);
-      animation: fadeIn .8s ease;
-    }
-    @keyframes fadeIn { from {opacity:0; transform: translateY(20px);} to {opacity:1;} }
-    .card h1 { font-size: 1.75rem; margin-bottom: 1.5rem; text-align: center; }
-    /* ---------- Form ---------- */
-    label { display: block; font-weight: 600; margin-bottom: .25rem; }
-    input {
-      width: 100%; padding: .6rem .75rem; border-radius: .5rem;
-      border: 1px solid #ced4da; margin-bottom: 1.25rem;
-      font-size: 1rem; outline: none;
-    }
-    input:focus { border-color: #0d6efd; box-shadow: 0 0 0 3px rgba(13,110,253,.25); }
-    button {
-      width: 100%; padding: .65rem; border: none; border-radius: .5rem;
-      background: #0d6efd; color: #fff; font-size: 1.05rem; cursor: pointer;
-      transition: background .2s ease;
-    }
-    button:hover { background: #0b5ed7; }
-    .msg { margin-top: 1rem; font-size: .9rem; text-align: center; color: #dc3545; }
-    /* ---------- Responsive tweak ---------- */
-    @media (max-width: 480px) { .card { padding: 2rem 1.25rem; } }
+    .card{width:100%;max-width:440px;background:#fff;padding:2.5rem 2rem;
+      border-radius:1rem;box-shadow:0 10px 35px rgba(0,0,0,.15);animation:fade .8s}
+    @keyframes fade{from{opacity:0;transform:translateY(20px)}to{opacity:1}}
+    h1{font-size:1.6rem;text-align:center;margin-bottom:1.5rem;}
+    /* ---------- Tab Buttons ---------- */
+    .tabs{display:flex;margin-bottom:1.5rem;}
+    .tab{flex:1;text-align:center;padding:.7rem 0;border-radius:.7rem  .7rem 0 0;
+      cursor:pointer;font-weight:600;background:#e9ecef;}
+    .tab.active{background:#0d6efd;color:#fff;}
+    /* ---------- Forms ---------- */
+    label{display:block;font-weight:600;margin-bottom:.25rem;}
+    input{width:100%;padding:.6rem .75rem;border-radius:.5rem;border:1px solid #ced4da;
+      margin-bottom:1.25rem;font-size:1rem;}
+    input:focus{border-color:#0d6efd;box-shadow:0 0 0 3px rgba(13,110,253,.25);}
+    button{width:100%;padding:.65rem;border:none;border-radius:.5rem;background:#0d6efd;
+      color:#fff;font-size:1.05rem;cursor:pointer;transition:background .2s;}
+    button:hover{background:#0b5ed7;}
+    .msg{margin-top:1rem;font-size:.9rem;text-align:center;color:#dc3545;}
+    /* ---------- Hide/show ---------- */
+    .hidden{display:none;}
+    @media(max-width:480px){.card{padding:2rem 1.25rem;}}
   </style>
 </head>
 <body>
   <div class="card">
-    <h1>Sign in</h1>
+    <h1 id="formTitle">Login</h1>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <div id="loginTab"  class="tab active">Login</div>
+      <div id="signupTab" class="tab">Create Account</div>
+    </div>
+
+    <!-- Login form -->
     <form id="loginForm">
-      <label for="email">Email</label>
-      <input type="email" id="email" required />
-
-      <label for="password">Password</label>
-      <input type="password" id="password" minlength="6" required />
-
+      <label for="loginUsername">Username</label>
+      <input type="text" id="loginUsername" required />
+      <label for="loginPassword">Password</label>
+      <input type="password" id="loginPassword" minlength="6" required />
       <button type="submit">Login</button>
-      <p class="msg" id="msg"></p>
+      <p class="msg" id="loginMsg"></p>
+    </form>
+
+    <!-- Sign-up form -->
+    <form id="signupForm" class="hidden">
+      <label for="suUsername">Username</label>
+      <input type="text" id="suUsername" required />
+      <label for="suPassword">Password</label>
+      <input type="password" id="suPassword" minlength="6" required />
+      <label for="suConfirm">Confirm Password</label>
+      <input type="password" id="suConfirm" minlength="6" required />
+      <button type="submit">Create Account</button>
+      <p class="msg" id="signupMsg"></p>
     </form>
   </div>
 
   <script>
-    // 👉 Adjust this to your actual backend URL on Render
-    const API_BASE = 'https://your-backend.onrender.com';
+    /* --------- Config --------- */
+    const API_BASE = 'https://your-backend.onrender.com'; // change to your Render URL
 
-    const form = document.getElementById('loginForm');
-    const msg  = document.getElementById('msg');
+    /* --------- Tab logic --------- */
+    const loginTab  = document.getElementById('loginTab');
+    const signupTab = document.getElementById('signupTab');
+    const loginForm = document.getElementById('loginForm');
+    const signupForm= document.getElementById('signupForm');
+    const formTitle = document.getElementById('formTitle');
 
-    form.addEventListener('submit', async (e) => {
+    loginTab.onclick = () => switchForm('login');
+    signupTab.onclick = () => switchForm('signup');
+
+    function switchForm(target){
+      const isLogin = target==='login';
+      loginTab.classList.toggle('active',isLogin);
+      signupTab.classList.toggle('active',!isLogin);
+      loginForm.classList.toggle('hidden',!isLogin);
+      signupForm.classList.toggle('hidden',isLogin);
+      formTitle.textContent = isLogin ? 'Login' : 'Create Account';
+    }
+
+    /* --------- Login --------- */
+    loginForm.addEventListener('submit', async (e)=>{
       e.preventDefault();
-      msg.textContent = '';
-
-      const payload = {
-        email: document.getElementById('email').value.trim(),
-        password: document.getElementById('password').value
-      };
-
-      try {
-        const res = await fetch(`${API_BASE}/login`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
+      const msg = document.getElementById('loginMsg');
+      msg.textContent='';
+      try{
+        const res = await fetch(`${API_BASE}/login`,{
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({
+            username: loginUsername.value.trim(),
+            password: loginPassword.value
+          })
         });
-
-        if (!res.ok) throw new Error('Invalid credentials');
+        if(!res.ok) throw new Error('Invalid username or password');
         const data = await res.json();
+        localStorage.setItem('token',data.token||'dummy');
+        window.location.href='dashboard.html';
+      }catch(err){ msg.textContent=err.message||'Login failed'; }
+    });
 
-        // Store token or flag as needed (simplest: localStorage)
-        localStorage.setItem('token', data.token || 'dummy');
-
-        // Redirect to dashboard
-        window.location.href = 'dashboard.html';
-      } catch (err) {
-        msg.textContent = err.message || 'Login failed';
+    /* --------- Sign-up --------- */
+    signupForm.addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const msg = document.getElementById('signupMsg');
+      msg.textContent='';
+      if(suPassword.value!==suConfirm.value){
+        msg.textContent='Passwords do not match'; return;
       }
+      try{
+        const res = await fetch(`${API_BASE}/register`,{
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({
+            username: suUsername.value.trim(),
+            password: suPassword.value
+          })
+        });
+        if(!res.ok){
+          const errText = await res.text();
+          throw new Error(errText||'Registration failed');
+        }
+        msg.style.color='#28a745';
+        msg.textContent='Account created! You can log in now.';
+        switchForm('login');
+      }catch(err){ msg.textContent=err.message||'Error creating account'; }
     });
   </script>
 </body>
