@@ -14,8 +14,17 @@
     }
     /* ---------- Card ---------- */
   
-    .card{width:100%;max-width:440px;background:#fff;padding:2.5rem 2rem;
-      border-radius:1rem;box-shadow:0 10px 35px rgba(0,0,0,.15);animation:fade .8s}
+    .card {
+  width: 100%;
+  max-width: 440px;
+  background: rgba(255, 255, 255, 0.85); /* slightly transparent */
+  backdrop-filter: blur(10px);
+  padding: 2.5rem 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.25);
+  animation: fade 0.8s;
+  color: #212529;
+}
     @keyframes fade{from{opacity:0;transform:translateY(20px)}to{opacity:1}}
     @keyframes fade{from{opacity:0;transform:translateY(20px)}to{opacity:1}}
     h1{font-size:1.6rem;text-align:center;margin-bottom:1.5rem;}
