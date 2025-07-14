@@ -1,1 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Inventory | Login</title>
+  <style>
+    /* ---------- Reset & Base ---------- */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: linear-gradient(135deg, #0d6efd 0%, #6610f2 100%);
+      display: flex; align-items: center; justify-content: center;
+      height: 100vh; color: #212529;
+    }
+    /* ---------- Card ---------- */
+    .card {
+      width: 100%; max-width: 420px;
+      background: #fff; padding: 2.5rem 2rem;
+      border-radius: 1rem; box-shadow: 0 10px 35px rgba(0,0,0,.15);
+      animation: fadeIn .8s ease;
+    }
+    @keyframes fadeIn { from {opacity:0; transform: translateY(20px);} to {opacity:1;} }
+    .card h1 { font-size: 1.75rem; margin-bottom: 1.5rem; text-align: center; }
+    /* ---------- Form ---------- */
+    label { display: block; font-weight: 600; margin-bottom: .25rem; }
+    input {
+      width: 100%; padding: .6rem .75rem; border-radius: .5rem;
+      border: 1px solid #ced4da; margin-bottom: 1.25rem;
+      font-size: 1rem; outline: none;
+    }
+    input:focus { border-color: #0d6efd; box-shadow: 0 0 0 3px rgba(13,110,253,.25); }
+    button {
+      width: 100%; padding: .65rem; border: none; border-radius: .5rem;
+      background: #0d6efd; color: #fff; font-size: 1.05rem; cursor: pointer;
+      transition: background .2s ease;
+    }
+    button:hover { background: #0b5ed7; }
+    .msg { margin-top: 1rem; font-size: .9rem; text-align: center; color: #dc3545; }
+    /* ---------- Responsive tweak ---------- */
+    @media (max-width: 480px) { .card { padding: 2rem 1.25rem; } }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Sign in</h1>
+    <form id="loginForm">
+      <label for="email">Email</label>
+      <input type="email" id="email" required />
 
+      <label for="password">Password</label>
+      <input type="password" id="password" minlength="6" required />
+
+      <button type="submit">Login</button>
+      <p class="msg" id="msg"></p>
+    </form>
+  </div>
+
+  <script>
+    // 👉 Adjust this to your actual backend URL on Render
+    const API_BASE = 'https://your-backend.onrender.com';
+
+    const form = document.getElementById('loginForm');
+    const msg  = document.getElementById('msg');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      msg.textContent = '';
+
+      const payload = {
+        email: document.getElementById('email').value.trim(),
+        password: document.getElementById('password').value
+      };
+
+      try {
+        const res = await fetch(`${API_BASE}/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (!res.ok) throw new Error('Invalid credentials');
+        const data = await res.json();
+
+        // Store token or flag as needed (simplest: localStorage)
+        localStorage.setItem('token', data.token || 'dummy');
+
+        // Redirect to dashboard
+        window.location.href = 'dashboard.html';
+      } catch (err) {
+        msg.textContent = err.message || 'Login failed';
+      }
+    });
+  </script>
+</body>
+</html>
