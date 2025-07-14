@@ -12,18 +12,33 @@
       background:url("bg.jpg") center/cover no-repeat;
       display:flex;align-items:center;justify-content:center;height:100vh;
     }
+    body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: url("your-image.jpg") center/cover no-repeat;
+  z-index: -2;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4); /* dark overlay for better contrast */
+  z-index: -1;
+}
     /* ---------- Card ---------- */
   /* 1️⃣  Default – mobile first (≤ 480 px)  */
 .card {
   width: 90%;
-  max-width: 400px;
-  background: rgba(255, 255, 255, 0.85); /* slightly transparent */
-  backdrop-filter: blur(10px);
+  max-width: 440px;
+  background: rgba(255, 255, 255, 0.2); /* semi-transparent */
+  backdrop-filter: blur(15px);         /* glass effect */
   padding: 2.5rem 2rem;
   border-radius: 1rem;
   box-shadow: 0 10px 35px rgba(0, 0, 0, 0.25);
   animation: fade 0.8s;
-  color: #212529;
+  color: #fff; /* Make text white for visibility on dark backgrounds */
 }
 
 /* 2️⃣  Small tablets & large phones (481 – 768 px) */
